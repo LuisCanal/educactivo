@@ -1,0 +1,11 @@
+{
+  "name": "educactivo-site",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev . --compatibility-date=2026-05-01",
+    "deploy": "wrangler pages deploy . --project-name educactivo"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

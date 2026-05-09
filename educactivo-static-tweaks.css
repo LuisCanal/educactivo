@@ -1,0 +1,53 @@
+/* Ajustes post-export estático (Cloudflare Pages) */
+#top .avia-standard-logo img,
+#top .logo img {
+  max-width: min(300px, 100%);
+  height: auto;
+}
+
+.educactivo-contact-form .form_element {
+  margin-bottom: 1em;
+}
+
+.educactivo-contact-form label {
+  display: block;
+  margin-bottom: 0.35em;
+  font-weight: 600;
+}
+
+.educactivo-contact-form .text_input,
+.educactivo-contact-form .text_area {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.educactivo-form-status {
+  margin-top: 1em;
+  padding: 0.75em 1em;
+  border-radius: 4px;
+}
+
+.educactivo-form-status--ok {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.educactivo-form-status--err {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+.educactivo-map-embed {
+  width: 100%;
+  height: 300px;
+  border: 0;
+  border-radius: 4px;
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .educactivo-map-embed {
+    height: 220px;
+  }
+}
