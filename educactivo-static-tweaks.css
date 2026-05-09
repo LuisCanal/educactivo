@@ -36,6 +36,11 @@
   box-sizing: border-box;
 }
 
+#ecf-captcha-q {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .educactivo-form-status {
   margin-top: 1em;
   padding: 0.75em 1em;

@@ -4,6 +4,38 @@
 
   var statusEl = document.getElementById("educactivo-contact-status");
   var submitBtn = form.querySelector('button[type="submit"]');
+  var qEl = document.getElementById("ecf-captcha-q");
+  var tokenInput = document.getElementById("ecf-captcha-token");
+  var answerInput = document.getElementById("ecf-captcha");
+
+  function loadChallenge() {
+    if (!tokenInput || !answerInput || !qEl) return Promise.resolve();
+
+    return fetch("/api/contact", { method: "GET", cache: "no-store" })
+      .then(function (r) {
+        return r.json().then(function (data) {
+          return { ok: r.ok, data: data };
+        });
+      })
+      .then(function (out) {
+        if (!out.ok || !out.data || !out.data.ok || !out.data.token) {
+          throw new Error(out.data && out.data.error ? out.data.error : "Captcha");
+        }
+        qEl.textContent = String(out.data.a) + " + " + String(out.data.b);
+        tokenInput.value = out.data.token;
+        answerInput.value = "";
+      });
+  }
+
+  loadChallenge().catch(function () {
+    if (qEl) qEl.textContent = "…";
+    if (statusEl) {
+      statusEl.textContent =
+        "No se pudo cargar la verificación. Recargá la página o probá más tarde.";
+      statusEl.className = "educactivo-form-status educactivo-form-status--err";
+    }
+    if (submitBtn) submitBtn.disabled = true;
+  });
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -21,12 +53,15 @@
       institution: String(fd.get("institution") || "").trim(),
       message: String(fd.get("message") || "").trim(),
       company: String(fd.get("company") || "").trim(),
+      captcha_token: String(fd.get("captcha_token") || "").trim(),
+      captcha_answer: String(fd.get("captcha_answer") || "").trim(),
     };
 
     fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
+      cache: "no-store",
     })
       .then(function (r) {
         return r.json().then(function (data) {
@@ -40,6 +75,7 @@
             statusEl.className = "educactivo-form-status educactivo-form-status--ok";
           }
           form.reset();
+          return loadChallenge();
         } else {
           var msg =
             (result.data && result.data.error) ||
@@ -48,6 +84,7 @@
             statusEl.textContent = msg;
             statusEl.className = "educactivo-form-status educactivo-form-status--err";
           }
+          return loadChallenge();
         }
       })
       .catch(function () {
