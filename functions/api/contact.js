@@ -166,12 +166,52 @@ export async function onRequestPost(context) {
   const email = String(body.email || "").trim();
   const institution = String(body.institution || "").trim();
   const message = String(body.message || "").trim();
+  const formKind = String(body.form || "contact").trim() || "contact";
 
-  if (!name || !phone || !email || !institution || !message) {
+  if (formKind !== "contact" && formKind !== "promo") {
+    return Response.json({ ok: false, error: "Solicitud no válida." }, { status: 400 });
+  }
+
+  if (!name || !phone || !email || !institution) {
     return Response.json(
       { ok: false, error: "Completá todos los campos obligatorios." },
       { status: 400 }
     );
+  }
+
+  if (formKind === "contact" && !message) {
+    return Response.json(
+      { ok: false, error: "Completá todos los campos obligatorios." },
+      { status: 400 }
+    );
+  }
+
+  const allowedUserRanges = new Set([
+    "10 a 100",
+    "101 a 200",
+    "201 a 300",
+    "301 a 500",
+    "501 a 800",
+    "801 o más",
+  ]);
+
+  let userCount = "";
+  let city = "";
+  if (formKind === "promo") {
+    userCount = String(body.user_count || "").trim();
+    city = String(body.city || "").trim();
+    if (!userCount || !city) {
+      return Response.json(
+        { ok: false, error: "Completá cantidad de usuarios y ciudad." },
+        { status: 400 }
+      );
+    }
+    if (!allowedUserRanges.has(userCount)) {
+      return Response.json(
+        { ok: false, error: "Cantidad de usuarios no válida." },
+        { status: 400 }
+      );
+    }
   }
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -179,15 +219,38 @@ export async function onRequestPost(context) {
     return Response.json({ ok: false, error: "El correo electrónico no es válido." }, { status: 400 });
   }
 
-  const html = `
+  const messageBlock =
+    message.length > 0
+      ? `<pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(message)}</pre>`
+      : "<p><em>(Sin mensaje)</em></p>";
+
+  let html;
+  let subject;
+  if (formKind === "promo") {
+    subject = `Promo Google Workspace — ${name}`;
+    html = `
+    <h1>Solicitud Promo Google Workspace</h1>
+    <p><strong>Nombre:</strong> ${escapeHtml(name)}</p>
+    <p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>
+    <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
+    <p><strong>Institución:</strong> ${escapeHtml(institution)}</p>
+    <p><strong>Cantidad de usuarios:</strong> ${escapeHtml(userCount)}</p>
+    <p><strong>Ciudad:</strong> ${escapeHtml(city)}</p>
+    <p><strong>Mensaje / comentarios:</strong></p>
+    ${messageBlock}
+  `;
+  } else {
+    subject = `Contacto web — ${name}`;
+    html = `
     <h1>Mensaje desde educactivo.com.ar</h1>
     <p><strong>Nombre:</strong> ${escapeHtml(name)}</p>
     <p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>
     <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
     <p><strong>Institución:</strong> ${escapeHtml(institution)}</p>
     <p><strong>Mensaje:</strong></p>
-    <pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(message)}</pre>
+    ${messageBlock}
   `;
+  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -199,7 +262,7 @@ export async function onRequestPost(context) {
       from: env.CONTACT_FROM,
       to: [env.CONTACT_TO],
       reply_to: email,
-      subject: `Contacto web — ${name}`,
+      subject,
       html,
     }),
   });

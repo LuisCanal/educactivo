@@ -25,7 +25,8 @@
 }
 
 /* El form mantiene av-form-labels-hidden (Enfold oculta labels); el captcha debe verse */
-#educactivo-contact-form.av-form-labels-hidden label[for="ecf-captcha"] {
+#educactivo-contact-form.av-form-labels-hidden label[for="ecf-captcha"],
+#educactivo-promo-form.av-form-labels-hidden label[for="promo-captcha"] {
   position: static !important;
   top: auto !important;
   left: auto !important;
@@ -42,13 +43,15 @@
 }
 
 .educactivo-contact-form .text_input,
-.educactivo-contact-form .text_area {
+.educactivo-contact-form .text_area,
+.educactivo-contact-form select.select {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
 
-#ecf-captcha-q {
+#ecf-captcha-q,
+#promo-captcha-q {
   font-weight: 700;
   white-space: nowrap;
 }
