@@ -5,4 +5,5 @@
 node_modules/
 .wrangler/
 dist/
+# Zips (p. ej. export Simply Static)
 *.zip
