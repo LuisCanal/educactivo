@@ -1,16 +1,17 @@
 /* Ajustes post-export estático (Cloudflare Pages) */
 
-/* Barra de navegación: mismo fondo que el tema (child / variables Enfold), no blanco #fff del core */
-#top #header.header_color {
-  background: var(--enfold-header-color-background-image, #bbcece) !important;
-  background-color: var(--enfold-header-color-bg, #bbcece) !important;
+/* Fondo bajo el menú: solo la franja del banner (no el #header). Referencia visual: banner_sobre_educ-1.png */
+#main #full_slider_1.avia-fullwidth-slider {
+  background-color: #b9cad0;
+  background-image: url("/wp-content/uploads/2021/03/banner_sobre_educ-1.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 
-#top #header.header_color .header_bg,
-#top #header.header_color #header_main.container_wrap,
-#top #header.header_color #header_meta.container_wrap {
-  background: var(--enfold-header-color-background-image, #bbcece) !important;
-  background-color: var(--enfold-header-color-bg, #bbcece) !important;
+#main #full_slider_1 .avia-slideshow,
+#main #full_slider_1 .avia-slideshow-inner {
+  background: transparent;
 }
 
 #top .avia-standard-logo img,
