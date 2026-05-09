@@ -1,4 +1,18 @@
 /* Ajustes post-export estático (Cloudflare Pages) */
+
+/* Barra de navegación: mismo fondo que el tema (child / variables Enfold), no blanco #fff del core */
+#top #header.header_color {
+  background: var(--enfold-header-color-background-image, #bbcece) !important;
+  background-color: var(--enfold-header-color-bg, #bbcece) !important;
+}
+
+#top #header.header_color .header_bg,
+#top #header.header_color #header_main.container_wrap,
+#top #header.header_color #header_meta.container_wrap {
+  background: var(--enfold-header-color-background-image, #bbcece) !important;
+  background-color: var(--enfold-header-color-bg, #bbcece) !important;
+}
+
 #top .avia-standard-logo img,
 #top .logo img {
   max-width: min(300px, 100%);
