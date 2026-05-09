@@ -24,16 +24,24 @@
   margin-bottom: 1em;
 }
 
-/* El form mantiene av-form-labels-hidden (Enfold oculta labels); el captcha debe verse */
+/* Enfold (avia-merged) oculta labels con position:fixed; cargamos este CSS al final del head para ganar en cascada */
 #educactivo-contact-form.av-form-labels-hidden label[for="ecf-captcha"],
 #educactivo-promo-form.av-form-labels-hidden label[for="promo-captcha"] {
   position: static !important;
   top: auto !important;
   left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
   width: auto !important;
   height: auto !important;
+  max-width: none !important;
   clip: auto !important;
+  clip-path: none !important;
   overflow: visible !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+  z-index: auto !important;
 }
 
 .educactivo-contact-form label {
